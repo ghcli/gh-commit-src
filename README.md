@@ -40,25 +40,25 @@ Before running AutoCommit, it's advisable to set a few environment variables �
 
 Add these environment variables by appending them to your `.bashrc`, `.zshrc`, or other shell configuration files 📄:
 
-\```bash
+```bash
 export GPT_API_KEY=your-api-key-here
 export LLM_MODEL=gpt-4.5-turbo
 export FINE_TUNE_PARAMS='{"temperature": 0.7}'
-\```
+```
 
 Or, you can set them inline before running the AutoCommit command 🖱️:
 
-\```bash
+```bash
 GPT_API_KEY=your-api-key-here LLM_MODEL=gpt-4.5-turbo FINE_TUNE_PARAMS='{"temperature": 0.7}' git auto-commit
-\```
+```
 
 ### Complete Install 📦
 
 For an end-to-end installation experience, execute 👇:
 
-\```bash
+```bash
 bash <(curl -s https://raw.githubusercontent.com/ghcli/commit/main/install.sh)
-\```
+```
 
 This comprehensive script accomplishes the following 📋:
 
@@ -73,17 +73,17 @@ This comprehensive script accomplishes the following 📋:
 
 To auto-generate a commit message, type ⌨️:
 
-\```bash
+```bash
 git auto-commit
-\```
+```
 
 ### GitHub CLI Extension 🔗
 
 For the same functionality through GitHub CLI, execute 🤖:
 
-\```bash
+```bash
 gh commit
-\```
+```
 
 Both commands invoke a Git diff, pass the changes to GPT-4, and craft a commit message based on the model's output 💬🎉.
 
