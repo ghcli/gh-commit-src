@@ -40,3 +40,5 @@ jobs:
         run: go mod download
       - name: Run tests
         run: go test -v ./...
+      - name: Install
+        run: gh extension install ghcli/gh-commit && gh commit
