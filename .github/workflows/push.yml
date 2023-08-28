@@ -9,6 +9,7 @@ on:
 
 env:
   GO_VERSION: 1.20.x
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   build:
