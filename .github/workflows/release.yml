@@ -3,6 +3,8 @@ on:
   push:
     tags:
       - "v*"
+    updated:
+      - "v*"
 permissions:
   contents: write
 
