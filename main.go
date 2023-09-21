@@ -31,13 +31,13 @@ func getCommitMessagePrompt() (string, error) {
 func getChatCompletionResponse(prompt string) (string, error) {
 	token := os.Getenv("OPENAI_API_KEY")
 	if token == "" {
-		return "", fmt.Errorf("OPENAI_API_KEY environment variable not set")
+		return "", fmt.Errorf("export OPENAI_API_KEY=<api_key> #execute this in your terminal and try again")
 	}
 	client := openai.NewClient(token)
 	resp, err := client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
-			Model: openai.GPT3Dot5Turbo,
+			Model: openai.GPT4,
 			Messages: []openai.ChatCompletionMessage{
 				{
 					Role:    openai.ChatMessageRoleUser,
@@ -55,7 +55,7 @@ func getChatCompletionResponse(prompt string) (string, error) {
 }
 
 func main() {
-	fmt.Println("hi world, this is the gh-commit extension!")
+	fmt.Println("examining code changes in the commit")
 	client, err := api.DefaultRESTClient()
 	if err != nil {
 		fmt.Println(err)
@@ -67,7 +67,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Printf("running as %s\n", response.Login)
+	//fmt.Printf("running as %s\n", response.Login)
 	prompt, err := getCommitMessagePrompt()
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
