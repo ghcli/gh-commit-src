@@ -34,22 +34,24 @@ Artfully create commit messages that reflect the essence of your code changes �
 
 Before running AutoCommit, it's advisable to set a few environment variables 🔑:
 
-- `GPT_API_KEY`: The API key for the GPT-4 model (🚨 **Required**).
-- `LLM_MODEL`: Specify a different language model 🔄 (Optional; Default: `gpt-4.5-turbo`).
+- `OPENAI_URL`:  Override openai api eg: azure openai (Optional; Default: openai url)
+- `OPENAI_API_KEY`: The API key for the GPT-4 model (🚨 **Required**).
+- `OPENAI_MODEL`: Specify a different language model 🔄 (Optional; Default: `gpt-4`).
 - `FINE_TUNE_PARAMS`: Additional parameters for fine-tuning the model output ⚙️ (Optional; Default: `{}`).
 
 Add these environment variables by appending them to your `.bashrc`, `.zshrc`, or other shell configuration files 📄:
 
 ```bash
-export GPT_API_KEY=your-api-key-here
-export LLM_MODEL=gpt-4.5-turbo
-export FINE_TUNE_PARAMS='{"temperature": 0.7}'
+export OPENAI_URL=https://apiendpoint.openai.azure.com
+export OPENAI_MODEL=llm-large
+export OPENAI_API_KEY=your-openai-api-key-here
+export FINE_TUNE_PARAMS='{"temperature": 0.7}' 
 ```
 
 Or, you can set them inline before running the AutoCommit command 🖱️:
 
 ```bash
-GPT_API_KEY=your-api-key-here LLM_MODEL=gpt-4.5-turbo FINE_TUNE_PARAMS='{"temperature": 0.7}' git auto-commit
+OPENAI_URL=your-openai-api-key-here OPENAI_MODEL=gpt-4 FINE_TUNE_PARAMS='{"temperature": 0.7}' git auto-commit
 ```
 
 ### Complete Install 📦
@@ -62,7 +64,7 @@ bash <(curl -s https://raw.githubusercontent.com/ghcli/commit/main/install.sh)
 
 This comprehensive script accomplishes the following 📋:
 
-1. Downloads the latest `generateCommitMessage` binary ⬇️.
+1. Downloads the latest `gh-commit` binary ⬇️.
 2. Makes the binary executable 🏃.
 3. Sets up a Git alias: `auto-commit` 🏷️.
 4. Installs the GitHub CLI extension for AutoCommit 🔄.
