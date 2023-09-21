@@ -58,7 +58,7 @@ func getChatCompletionResponse() (string, error) {
 	}
 
 	messages := []azopenai.ChatMessage{
-		{Role: to.Ptr(azopenai.ChatRoleSystem), Content: to.Ptr("You will examine and explain the given code changes and provide a commit message.")},
+		{Role: to.Ptr(azopenai.ChatRoleSystem), Content: to.Ptr("You will examine and explain the given code changes and provide a commit message. The first line of the response will be a 20 word Title summary ending with a newline in plain text. The subsequent lines will have a detailed commit message. You will write the commit message in well structured beautiful markdown and use relevant emojis")},
 		{Role: to.Ptr(azopenai.ChatRoleUser), Content: to.Ptr(diff)},
 		{Role: to.Ptr(azopenai.ChatRoleSystem), Content: to.Ptr("Enter commit message:")},
 	}
@@ -84,7 +84,7 @@ func getChatCompletionResponse() (string, error) {
 }
 
 func main() {
-	fmt.Println("examining code changes in the commit")
+	//fmt.Println("examining code changes in the commit")
 	client, err := api.DefaultRESTClient()
 	if err != nil {
 		fmt.Println(err)
