@@ -69,6 +69,14 @@ This comprehensive script accomplishes the following 📋:
 3. Sets up a Git alias: `auto-commit` 🏷️.
 4. Installs the GitHub CLI extension for AutoCommit 🔄.
 
+### Upgrade 📈
+
+To upgrade to the latest version of AutoCommit, execute 📝:
+
+```bash
+gh extensions upgrade --all
+```
+
 ## Usage 🖱️
 
 ### Native Git 🌐
@@ -96,8 +104,9 @@ Both commands invoke a Git diff, pass the changes to GPT-4, and craft a commit m
 1. Fork the repository 🍴.
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`) 🌳.
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`) 📝.
-4. Push to the branch (`git push origin feature/AmazingFeature`) ⬆️.
-5. Open a pull request 🤲.
+4. Build and execute on command line with `go mod download && go mod tidy && go build -v . && sleep 1 && chmod a+rx ./gh-commit && ./gh-commit` 🏗️.
+5. Push to the branch (`git push origin feature/AmazingFeature`) ⬆️.
+6. Open a pull request 🤲.
 
 ### Code of Conduct 📜
 
