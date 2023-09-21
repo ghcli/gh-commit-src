@@ -16,7 +16,7 @@ echo "Latest release: $LATEST_RELEASE"
 gh extension install ghcli/commit 
 
 # Create Git alias
-git config --global alias.auto-commit '!git commit -m "$(gh commit) -e" || git commit -a -m "$(gh commit)" -e'
+git config --global alias.auto-commit '!git commit -m "$(gh commit)" || git commit -a -m "$(gh commit)"'
 
 echo "Commit GitHub CLI extension installed successfully!"
 echo "Usage: git auto-commit"
