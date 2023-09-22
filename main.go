@@ -11,8 +11,12 @@ func main() {
 	flag.Parse()
 
 	if *ask != "" {
-		fmt.Printf("You've asked: %s\n", *ask)
-		// rest of your code...
+		response, err := getChatCompletionResponse(*ask)
+		if err != nil {
+			fmt.Printf("Error: %v\n", err)
+		} else {
+			fmt.Println(response)
+		}
 	}
 
 	if *stats {
