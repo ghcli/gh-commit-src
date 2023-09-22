@@ -8,6 +8,7 @@ import (
 func main() {
 	stats := flag.Bool("stats", false, "display stats")
 	ask := flag.String("ask", "", "ask a question")
+	//use github.com/spf13/cobra if more feature are needed
 	flag.Parse()
 
 	if *ask != "" {
