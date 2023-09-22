@@ -26,7 +26,7 @@ func getGitDiff() (string, error) {
 	return string(output), nil
 }
 
-func getChatCompletionResponse() (string, error) {
+func getChatCompletionResponse(messages []azopenai.ChatMessage) (string, error) {
 	err := godotenv.Load()
 	if err != nil {
 		fmt.Errorf(".env file not found: %v", err)
@@ -55,12 +55,6 @@ func getChatCompletionResponse() (string, error) {
 	if model == "" {
 		model = openai.GPT4
 	}
-	diff, err := getGitDiff()
-	if err != nil {
-		return "", fmt.Errorf("error getting git diff: %v", err)
-	}
-
-	messages := newFunction(diff)
 
 	resp, err := client.GetChatCompletions(
 		context.Background(),
@@ -82,7 +76,7 @@ func getChatCompletionResponse() (string, error) {
 	return *resp.Choices[0].Message.Content, nil
 }
 
-func newFunction(diff string) []azopenai.ChatMessage {
+func getPrompt(diff string) []azopenai.ChatMessage {
 	messages := []azopenai.ChatMessage{
 		{Role: to.Ptr(azopenai.ChatRoleSystem), Content: to.Ptr("You will examine and explain the given code changes and provide a commit message. The first line of the response will be a 20 word Title summary ending with a newline in plain text. The subsequent lines will have a detailed commit message. You will write the commit message in well structured beautiful markdown and use relevant emojis")},
 		{Role: to.Ptr(azopenai.ChatRoleUser), Content: to.Ptr(diff)},
@@ -164,7 +158,12 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	completionResponse, err := getChatCompletionResponse()
+
+	diff, err := getGitDiff()
+
+	messages := getPrompt(diff)
+
+	completionResponse, err := getChatCompletionResponse(messages)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return
