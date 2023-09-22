@@ -11,9 +11,9 @@ func main() {
 	flag.Parse()
 
 	if *ask != "" {
-        fmt.Printf("You've asked: %s\n", *ask)
-        // rest of your code...
-    }
+		fmt.Printf("You've asked: %s\n", *ask)
+		// rest of your code...
+	}
 
 	if *stats {
 		fmt.Println("Usage: gh-commit")
@@ -43,14 +43,15 @@ func main() {
 		return
 	}
 
-	diff, err := getGitDiff()
-	prompt := getDiffPrompt(diff)
-	completionResponse, err := getChatCompletionResponse(prompt)
-	if err != nil {
-		fmt.Printf("Error: %v\n", err)
+	if flag.NFlag() == 0 {
+		diff, err := getGitDiff()
+		prompt := getDiffPrompt(diff)
+		completionResponse, err := getChatCompletionResponse(prompt)
+		if err != nil {
+			fmt.Printf("Error: %v\n", err)
+			return
+		}
+		fmt.Println(completionResponse)
 		return
 	}
-	fmt.Println(completionResponse)
 }
-
-
