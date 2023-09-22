@@ -11,7 +11,7 @@ func main() {
 	flag.Parse()
 
 	if *ask != "" {
-		response, err := getChatCompletionResponse(*ask)
+		response, err := getChatCompletionResponse(getPrompt(*ask))
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)
 		} else {
@@ -36,26 +36,22 @@ func main() {
 					"If all commit messages were written by %s, you would have saved %.1f hours! %s",
 				numCommits, wordCount, "AI", hoursSaved, emoji)
 
-			prompt := getPrompt(message)
-			completionResponse, err := getChatCompletionResponse(prompt)
+			completionResponse, err := getChatCompletionResponse(getPrompt(message))
 			if err != nil {
 				fmt.Printf("Error: %v\n", err)
 				return
 			}
 			fmt.Println(completionResponse)
 		}
-		return
 	}
 
 	if flag.NFlag() == 0 {
 		diff, err := getGitDiff()
-		prompt := getDiffPrompt(diff)
-		completionResponse, err := getChatCompletionResponse(prompt)
+		completionResponse, err := getChatCompletionResponse(getDiffPrompt(diff))
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)
 			return
 		}
 		fmt.Println(completionResponse)
-		return
 	}
 }
