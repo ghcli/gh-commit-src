@@ -2,10 +2,13 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
+	"math"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/ai/azopenai"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
@@ -57,11 +60,7 @@ func getChatCompletionResponse() (string, error) {
 		return "", fmt.Errorf("error getting git diff: %v", err)
 	}
 
-	messages := []azopenai.ChatMessage{
-		{Role: to.Ptr(azopenai.ChatRoleSystem), Content: to.Ptr("You will examine and explain the given code changes and provide a commit message. The first line of the response will be a 20 word Title summary ending with a newline in plain text. The subsequent lines will have a detailed commit message. You will write the commit message in well structured beautiful markdown and use relevant emojis")},
-		{Role: to.Ptr(azopenai.ChatRoleUser), Content: to.Ptr(diff)},
-		{Role: to.Ptr(azopenai.ChatRoleSystem), Content: to.Ptr("Enter commit message:")},
-	}
+	messages := newFunction(diff)
 
 	resp, err := client.GetChatCompletions(
 		context.Background(),
@@ -83,8 +82,77 @@ func getChatCompletionResponse() (string, error) {
 	return *resp.Choices[0].Message.Content, nil
 }
 
+func newFunction(diff string) []azopenai.ChatMessage {
+	messages := []azopenai.ChatMessage{
+		{Role: to.Ptr(azopenai.ChatRoleSystem), Content: to.Ptr("You will examine and explain the given code changes and provide a commit message. The first line of the response will be a 20 word Title summary ending with a newline in plain text. The subsequent lines will have a detailed commit message. You will write the commit message in well structured beautiful markdown and use relevant emojis")},
+		{Role: to.Ptr(azopenai.ChatRoleUser), Content: to.Ptr(diff)},
+		{Role: to.Ptr(azopenai.ChatRoleSystem), Content: to.Ptr("Enter commit message:")},
+	}
+	return messages
+}
+
+func getCommitStats() (int, int, error) {
+    cmd := exec.Command("git","log","--oneline")
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		return 0, 0, err
+	}
+	if err := cmd.Start(); err != nil {
+		return 0, 0, err
+	}
+	defer cmd.Wait()
+	cmd = exec.Command("wc", "-lw")
+	cmd.Stdin = stdout
+    output, err := cmd.Output()
+	fmt.Sprintf(" %s", output)
+    if err != nil {
+        return 0, 0, err
+    }
+    fields := strings.Fields(string(output))
+    numLines, err := strconv.Atoi(fields[0])
+    if err != nil {
+        return 0, 0, err
+    }
+    numWords, err := strconv.Atoi(fields[1])
+    if err != nil {
+        return numLines, 0, err
+    }
+    return numLines, numWords, nil
+}
+
+func calculateTimeSaved(numCommits int, wordCount int) float64 {
+
+	// Assuming an average typing speed of 40 words per minute
+	wordsPerMinute := 40.0
+	hoursSaved := float64(wordCount) / wordsPerMinute / 60
+	return math.Round(hoursSaved*10) / 10
+}
+
 func main() {
-	//fmt.Println("examining code changes in the commit")
+	help := flag.Bool("help", false, "display help message")
+	flag.Parse()
+
+	if *help {
+		fmt.Println("Usage: gh-commit")
+		numCommits, wordCount, err := getCommitStats()
+		if err != nil {
+			fmt.Printf("Error: %v\n", err)
+			return
+		} else {
+			fmt.Printf("Number of commits: %d\n", numCommits)
+			fmt.Printf("Number of words in the commit message: %d\n", wordCount)
+		}
+
+		hoursSaved := calculateTimeSaved(numCommits, wordCount)
+
+		// Format output with emojis
+		emoji := "🤖"
+		message := fmt.Sprintf("If all commit messages were written by %s, you would saved %.1f hours! %s", "AI", hoursSaved, emoji)
+		fmt.Println(message)
+		return
+
+	}
+
 	client, err := api.DefaultRESTClient()
 	if err != nil {
 		fmt.Println(err)
