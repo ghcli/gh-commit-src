@@ -4,11 +4,11 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"math"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
-	"math"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/ai/azopenai"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
@@ -86,7 +86,7 @@ func getPrompt(diff string) []azopenai.ChatMessage {
 }
 
 func getCommitStats() (int, int, error) {
-    cmd := exec.Command("git","log","--oneline")
+	cmd := exec.Command("git", "log", "--oneline")
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		return 0, 0, err
@@ -97,21 +97,21 @@ func getCommitStats() (int, int, error) {
 	defer cmd.Wait()
 	cmd = exec.Command("wc", "-lw")
 	cmd.Stdin = stdout
-    output, err := cmd.Output()
+	output, err := cmd.Output()
 	fmt.Sprintf(" %s", output)
-    if err != nil {
-        return 0, 0, err
-    }
-    fields := strings.Fields(string(output))
-    numLines, err := strconv.Atoi(fields[0])
-    if err != nil {
-        return 0, 0, err
-    }
-    numWords, err := strconv.Atoi(fields[1])
-    if err != nil {
-        return numLines, 0, err
-    }
-    return numLines, numWords, nil
+	if err != nil {
+		return 0, 0, err
+	}
+	fields := strings.Fields(string(output))
+	numLines, err := strconv.Atoi(fields[0])
+	if err != nil {
+		return 0, 0, err
+	}
+	numWords, err := strconv.Atoi(fields[1])
+	if err != nil {
+		return numLines, 0, err
+	}
+	return numLines, numWords, nil
 }
 
 func calculateTimeSaved(numCommits int, wordCount int) float64 {
@@ -129,22 +129,30 @@ func main() {
 	if *help {
 		fmt.Println("Usage: gh-commit")
 		numCommits, wordCount, err := getCommitStats()
+		hoursSaved := calculateTimeSaved(numCommits, wordCount)
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)
 			return
 		} else {
 			fmt.Printf("Number of commits: %d\n", numCommits)
 			fmt.Printf("Number of words in the commit message: %d\n", wordCount)
+			message := fmt.Sprintf("Could you please format the git commit stats data (number of commits: %d, word count: %d) and figure out profound insights on how writing these commit messages by AI is saving human hours? use relevant emojis, use real world stats in calculations and explain", numCommits, wordCount)
+
+			emoji := "🤖"
+			hourssavedmsg := fmt.Sprintf("If all commit messages were written by %s, you would saved %.1f hours! %s", "AI", hoursSaved, emoji)
+
+			messages := []azopenai.ChatMessage{
+				{Role: to.Ptr(azopenai.ChatRoleSystem), Content: to.Ptr(message)},
+				{Role: to.Ptr(azopenai.ChatRoleSystem), Content: to.Ptr(hourssavedmsg)},
+			}
+			completionResponse, err := getChatCompletionResponse(messages)
+			if err != nil {
+				fmt.Printf("Error: %v\n", err)
+				return
+			}
+			fmt.Println(completionResponse)
 		}
-
-		hoursSaved := calculateTimeSaved(numCommits, wordCount)
-
-		// Format output with emojis
-		emoji := "🤖"
-		message := fmt.Sprintf("If all commit messages were written by %s, you would saved %.1f hours! %s", "AI", hoursSaved, emoji)
-		fmt.Println(message)
 		return
-
 	}
 
 	client, err := api.DefaultRESTClient()
