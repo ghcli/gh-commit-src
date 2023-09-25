@@ -1,6 +1,20 @@
 # Commit - Automated Git Commit Messages with LLM 🤖📝
 Artfully create commit messages that reflect the essence of your code changes 🎨🔍. Craftsmanship for your commits 👨‍🎨. Unleash the power of language models to automate your Git commit messages 🌐🤖. With Commit, save time ⏰ and generate meaningful commit messages based on your code changes 📜.
 
+The average person types around 40 words per minute. Imagine an AI has written 573 words in commit messages, a human would have taken approximately 14.32 minutes to write the same quantity of words. 
+
+If we calculate the time taken for a human to make an individual commit, assuming it takes around 5 minutes per commit on average, for the 29 commits made by AI, a human would have taken approximately 145 minutes or 2.42 hours.
+
+Hence, in total (commit making and message writing time), a human would have taken approximately 2.62 hours. 🕰️ Given that all this work was done by an AI, we can say 2.62 hours of human-time was saved. 
+
+By extrapolating these numbers, if 1000 commits were made, it would save approximately 90 hours of human-time assuming the ratio of words per commit remains constant. If a software development team consists of 5 people, this time saving allows for roughly 18 additional hours per person, which increases productivity, efficiency, reduces burnout and leaves additional time for creative, challenging tasks or problem solving that AI can't do.👩‍💻👨‍💻
+
+This not only displays AI's potential role in tech automation, but also shows how it helps in giving human employees the bandwidth to focus on work that requires human intelligence and creativity, creating a more balanced and efficient work environment. 🏢🚀📈
+
+If we take into consideration the larger tech industry where millions of commits are made daily, we’re potentially looking at thousands of hours saved per day by utilising AI in this manner! 💡+ AI bot saves the day again! 🚀🌟
+
+Fun Fact: Using an AI to write commits and other automations can reduce the risk of Repetitive Strain Injury (RSI), a common condition affecting people who perform repetitive tasks, like typing, for extended periods. 💻🌟
+
 ## Table of Contents 📚
 
 - [Features 🌟](#features)
