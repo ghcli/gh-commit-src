@@ -63,10 +63,22 @@ func getCommitStats() (int, int, error) {
 }
 
 func getDiffPrompt(diff string) []azopenai.ChatMessage {
+
+	prompt := os.Getenv("PROMPT_OVERRIDE")
+	if prompt == "" {
+		prompt = `You will examine and explain the given code changes and write a commit message in Conventional Commits format. 
+		The first line of the commit message should be a 20 word Title summary include a type, optional scope, subject in plain text, seperated by a newline and the following body. 
+		The types should be one of:
+			- fix: for a bug fix
+			- feat: for a new feature 
+			- perf: for a performance improvement
+			- revert: to revert a previous commit
+		The body will explain the code change. Body will be formatted in well structured beautiful markdown and use relevant emojis`
+	}
 	messages := []azopenai.ChatMessage{
-		{Role: to.Ptr(azopenai.ChatRoleSystem), Content: to.Ptr("You will examine and explain the given code changes and provide a commit message. The first line of the response will be a 20 word Title summary ending with a newline in plain text. The subsequent lines will have a detailed commit message. You will write the commit message in well structured beautiful markdown and use relevant emojis")},
+		{Role: to.Ptr(azopenai.ChatRoleSystem), Content: to.Ptr(prompt)},
 		{Role: to.Ptr(azopenai.ChatRoleUser), Content: to.Ptr(diff)},
-		{Role: to.Ptr(azopenai.ChatRoleSystem), Content: to.Ptr("Enter commit message:")},
+		{Role: to.Ptr(azopenai.ChatRoleSystem), Content: to.Ptr("Commit message:")},
 	}
 	return messages
 }
