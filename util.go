@@ -73,13 +73,13 @@ func getDiffPrompt(diff string) []azopenai.ChatMessage {
 			- feat: for a new feature 
 			- perf: for a performance improvement
 			- revert: to revert a previous commit
-		The body will explain the code change. Body will be formatted in well structured beautiful markdown and use relevant emojis
+		The body will explain the code change. Body will be formatted in well structured beautifully rendered and use relevant emojis
 		if no code changes are detected, you will reply with no code change detected message.`
 	}
 	messages := []azopenai.ChatMessage{
 		{Role: to.Ptr(azopenai.ChatRoleSystem), Content: to.Ptr(prompt)},
 		{Role: to.Ptr(azopenai.ChatRoleUser), Content: to.Ptr(diff)},
-		{Role: to.Ptr(azopenai.ChatRoleSystem), Content: to.Ptr("Commit message:")},
+		{Role: to.Ptr(azopenai.ChatRoleSystem), Content: to.Ptr("Commit message as follows:")},
 	}
 	return messages
 }
