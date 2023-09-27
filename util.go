@@ -67,7 +67,7 @@ func getDiffPrompt(diff string) []azopenai.ChatMessage {
 	prompt := os.Getenv("PROMPT_OVERRIDE")
 	if prompt == "" {
 		prompt = `You will examine and explain the given code changes and write a commit message in Conventional Commits format. 
-		The first line of the commit message should be a 20 word Title summary include a type, optional scope, subject in plain text, seperated by a newline and the following body. 
+		The first line of the commit message should be a 20 word Title summary include a type, optional scope, subject in text, seperated by a newline and the following body. 
 		The types should be one of:
 			- fix: for a bug fix
 			- feat: for a new feature 
