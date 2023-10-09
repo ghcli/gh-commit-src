@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/Azure/azure-sdk-for-go/sdk/ai/azopenai v0.2.0
-	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.6.1
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.8.0
 	github.com/cli/go-gh/v2 v2.3.0
 	github.com/joho/godotenv v1.3.0
 	github.com/sashabaranov/go-openai v1.15.3
