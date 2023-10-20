@@ -14,13 +14,13 @@ import (
 func TestMain(m *testing.M) {
 	err := godotenv.Load()
     if err != nil {
-        log.Fatal("Error loading .env file")
+        log.Println("Warning: Error loading .env file. If environment variables are set, tests will still run.")
     }
     os.Exit(m.Run())
 }
 
 func TestStatsFlag(t *testing.T) {
-    os.Args = []string{"cmd", "-stats"}
+    os.Args = []string{"cmd", "-v"}
 
     // Capture the output
     var buf bytes.Buffer
@@ -29,7 +29,7 @@ func TestStatsFlag(t *testing.T) {
     // Check the output
     got := buf.String()
     if got == "" {
-        t.Errorf("No output for stats flag")
+        t.Errorf("No output for v flag")
     }
 }
 
