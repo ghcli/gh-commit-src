@@ -8,7 +8,6 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
-
 	"github.com/Azure/azure-sdk-for-go/sdk/ai/azopenai"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 	"github.com/cli/go-gh/v2/pkg/api"
@@ -16,12 +15,21 @@ import (
 	openai "github.com/sashabaranov/go-openai"
 )
 
+const MaxDiffLength = 30000 // set to 30k since large model has maximum context length is 32768 tokens.
+
 func getGitDiff() (string, error) {
 	cmd := exec.Command("git", "diff")
 	output, err := cmd.Output()
 	if err != nil {
 		return "", fmt.Errorf("error running git diff: %v", err)
 	}
+	diff := string(output)
+    runes := []rune(diff)
+	size := len(runes)
+    if size > MaxDiffLength {
+        runes = runes[:MaxDiffLength]
+        return string(runes), fmt.Errorf("the total length was %d and only first 30k were used", size)
+    }
 	return string(output), nil
 }
 
@@ -46,7 +54,6 @@ func getCommitStats() (int, int, error) {
 	cmd = exec.Command("wc", "-lw")
 	cmd.Stdin = stdout
 	output, err := cmd.Output()
-	fmt.Sprintf(" %s", output)
 	if err != nil {
 		return 0, 0, err
 	}
