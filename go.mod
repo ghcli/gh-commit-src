@@ -3,7 +3,7 @@ module github.com/megamanics/gh-commit
 go 1.21
 
 require (
-	github.com/Azure/azure-sdk-for-go/sdk/ai/azopenai v0.2.0
+	github.com/Azure/azure-sdk-for-go/sdk/ai/azopenai v0.3.0
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.6.1
 	github.com/cli/go-gh/v2 v2.4.0
 	github.com/joho/godotenv v1.3.0
