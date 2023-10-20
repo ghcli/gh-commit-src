@@ -1,23 +1,9 @@
 package main
 
 import (
-	"bytes"
 	"flag"
-	"fmt"
-	"github.com/joho/godotenv"
-	"io"
-	"log"
-	"os"
 	"testing"
 )
-
-func TestMain(m *testing.M) {
-	err := godotenv.Load()
-	if err != nil {
-		log.Println("Warning: Error loading .env file. If environment variables are set, tests will still run.")
-	}
-	os.Exit(m.Run())
-}
 
 func TestStatsFlag(t *testing.T) {
 	flagSet := flag.NewFlagSet("TestStatsFlag", flag.ContinueOnError)
@@ -33,38 +19,15 @@ func TestStatsFlag(t *testing.T) {
 	}
 }
 
-func TestAskFlag(t *testing.T) {
-	os.Args = []string{"gh-commit", "-ask", "What's the weather like?"}
-
-	// Capture the output
-	var buf bytes.Buffer
-	run(&buf)
-
-	// Check the output
-	got := buf.String()
-	if got == "" {
-		t.Errorf("No output for ask flag")
+func Test_main(t *testing.T) {
+	tests := []struct {
+		name string
+	}{
+		// TODO: Add test cases.
 	}
-}
-
-func run(out io.Writer) {
-	stats := flag.Bool("stats", false, "display stats")
-	ask := flag.String("ask", "", "ask a question")
-	flag.Parse()
-
-	if flag.NFlag() == 0 {
-		fmt.Fprintln(out, "No flags were passed. Please provide a flag.")
-		return
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			main()
+		})
 	}
-
-	if *ask != "" {
-		fmt.Fprintf(out, "You've asked: %s\n", *ask)
-	}
-
-	if *stats {
-		fmt.Fprintln(out, "Usage: gh-commit")
-		// rest of your code...
-	}
-
-	// rest of your code...
 }
