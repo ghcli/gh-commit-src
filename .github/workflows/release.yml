@@ -14,3 +14,5 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ghcli/gh-extension-precompile@main
+      with:
+        release_repository: ghcli/gh-commit
