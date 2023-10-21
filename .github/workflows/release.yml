@@ -13,6 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: "gh-commit"
       - uses: ghcli/gh-extension-precompile@main
         with:
           release_repository: ghcli/gh-commit
+          release_token: ${{ steps.app-token.outputs.token }}
