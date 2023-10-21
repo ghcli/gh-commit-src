@@ -24,3 +24,4 @@ jobs:
         with:
           release_repository: ghcli/gh-commit
           release_token: ${{ steps.app-token.outputs.token }}
+          release_title_prefix: gh-commit
