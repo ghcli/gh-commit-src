@@ -23,7 +23,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Compile
-        run: go mod download && go mod tidy -v -x -e && go build -v ./... && chmod a+rx ./gh-commit && ./gh-commit
+        run: go mod download && go mod tidy -v -x -e && go build -v ./... && chmod a+rx ./gh-commit-src && ./gh-commit-src
 
   test:
     name: Test
@@ -40,4 +40,4 @@ jobs:
       - name: Run tests
         run: go test -v ./...
       - name: Install
-        run: gh extension install ghcli/gh-commit && gh commit
+        run: gh extension install ghcli/gh-commit-src && gh commit-src
