@@ -20,10 +20,15 @@ const MaxDiffLength = 30000 // set to 30k since large model has maximum context 
 func getGitDiff() (string, error) {
 	cmd := exec.Command("git", "diff")
 	output, err := cmd.Output()
-	if err != nil {
-		return "", fmt.Errorf("error running git diff: %v", err)
-	}
-	diff := string(output)
+	diff := strings.TrimSpace(string(output))
+	if diff == "" {
+        cmd = exec.Command("git", "diff", "--staged")
+        output, err = cmd.Output()
+        if err != nil {
+            return "", err
+        }
+        diff = strings.TrimSpace(string(output))
+    }
     runes := []rune(diff)
 	size := len(runes)
     if size > MaxDiffLength {
