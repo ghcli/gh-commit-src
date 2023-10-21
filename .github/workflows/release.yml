@@ -1,4 +1,4 @@
-name: release
+name: Release a new version
 on:
   repository_dispatch:
   push:
