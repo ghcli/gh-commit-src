@@ -1,10 +1,12 @@
 name: release
 on:
+  repository_dispatch:
   push:
     tags:
       - "v*"
     updated:
       - "v*"
+
 permissions:
   contents: write
 
