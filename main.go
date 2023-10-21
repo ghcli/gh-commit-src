@@ -38,6 +38,7 @@ func main() {
 				numCommits, wordCount, "AI", hoursSaved, emoji)
 
 			completionResponse, err := getChatCompletionResponse(getPrompt(message))
+			completionResponse = formatResponse(completionResponse)
 			if err != nil {
 				fmt.Printf("Error: %v\n", err)
 				return

@@ -161,3 +161,10 @@ func getUserName() {
 		return
 	}
 }
+
+func formatResponse(response string) string {
+	//remove leading and trailing quotes ``` from response
+	response = strings.TrimPrefix(response, "```")
+	response = strings.TrimSuffix(response, "```")
+	return response
+}
