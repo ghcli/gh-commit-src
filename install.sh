@@ -1,6 +1,11 @@
 #!/bin/bash
 
-# Set required environment variables
+if ! command -v gh &> /dev/null
+then
+    echo "GitHub CLI could not be found. Install from https://cli.github.com or https://github.com/cli/cli"
+    exit
+fi
+
 echo "Please enter your OpenAI API key:"
 read OPENAI_API_KEY
 echo "You entered: $OPENAI_API_KEY"
