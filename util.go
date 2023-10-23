@@ -167,7 +167,7 @@ func getUserName() {
 	}
 }
 
-var patterns = []string{"```bash", "```", "pattern3"}
+var patterns = []string{"```bash", "```plaintext","```diff", "```", "```python", "```javascript", "```go", "```java", "```c", "```cpp", "```csharp", "```ruby", "```php", "```html", "```css", "```json", "```xml", "```yaml", "```md", "```markdown", "```sql", "```shell", "```powershell", "```dockerfile", "```makefile", "```ini", "```apacheconf", "```nginx", "```git", "```vim", "```vimscrip"}
 
 func formatResponse(response string) string {
 	for _, pattern := range patterns {
