@@ -3,16 +3,16 @@ package main
 import (
 	"context"
 	"fmt"
-	"math"
-	"os"
-	"os/exec"
-	"strconv"
-	"strings"
 	"github.com/Azure/azure-sdk-for-go/sdk/ai/azopenai"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 	"github.com/cli/go-gh/v2/pkg/api"
 	"github.com/joho/godotenv"
 	openai "github.com/sashabaranov/go-openai"
+	"math"
+	"os"
+	"os/exec"
+	"strconv"
+	"strings"
 )
 
 const MaxDiffLength = 30000 // set to 30k since large model has maximum context length is 32768 tokens.
@@ -22,19 +22,19 @@ func getGitDiff() (string, error) {
 	output, err := cmd.Output()
 	diff := strings.TrimSpace(string(output))
 	if diff == "" {
-        cmd = exec.Command("git", "diff", "--staged")
-        output, err = cmd.Output()
-        if err != nil {
-            return "", err
-        }
-        diff = strings.TrimSpace(string(output))
-    }
-    runes := []rune(diff)
+		cmd = exec.Command("git", "diff", "--staged")
+		output, err = cmd.Output()
+		if err != nil {
+			return "", err
+		}
+		diff = strings.TrimSpace(string(output))
+	}
+	runes := []rune(diff)
 	size := len(runes)
-    if size > MaxDiffLength {
-        runes = runes[:MaxDiffLength]
-        return string(runes), fmt.Errorf("the total length was %d and only first 30k were used", size)
-    }
+	if size > MaxDiffLength {
+		runes = runes[:MaxDiffLength]
+		return string(runes), fmt.Errorf("the total length was %d and only first 30k were used", size)
+	}
 	return string(output), nil
 }
 
@@ -167,9 +167,12 @@ func getUserName() {
 	}
 }
 
+var patterns = []string{"```bash", "```", "pattern3"}
+
 func formatResponse(response string) string {
-	//remove leading and trailing quotes ``` from response
-	response = strings.TrimPrefix(response, "```")
-	response = strings.TrimSuffix(response, "```")
+	for _, pattern := range patterns {
+		response = strings.TrimPrefix(response, pattern)
+		response = strings.TrimSuffix(response, pattern)
+	}
 	return response
 }
