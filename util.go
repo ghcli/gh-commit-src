@@ -7,7 +7,6 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 	"github.com/cli/go-gh/v2/pkg/api"
 	"github.com/joho/godotenv"
-	openai "github.com/sashabaranov/go-openai"
 	"math"
 	"os"
 	"os/exec"
@@ -108,36 +107,60 @@ func getChatCompletionResponse(messages []azopenai.ChatMessage) (string, error) 
 	if err != nil {
 		fmt.Errorf(".env file not found: %v", err)
 	}
-	keyCredential, err := azopenai.NewKeyCredential(os.Getenv("OPENAI_API_KEY"))
-	if err != nil {
-		fmt.Errorf("export OPENAI_API_KEY=<api_key> #execute this in your terminal and try again")
-		return "", fmt.Errorf("error creating Azure OpenAI client: %v", err)
+	
+	// Try new environment variables first, fall back to old ones for compatibility
+	apiKey := os.Getenv("AZURE_OPENAI_API_KEY")
+	if apiKey == "" {
+		apiKey = os.Getenv("OPENAI_API_KEY")
 	}
-	url := os.Getenv("OPENAI_URL")
-	model := os.Getenv("OPENAI_MODEL")
+	
+	endpoint := os.Getenv("AZURE_OPENAI_ENDPOINT")
+	if endpoint == "" {
+		endpoint = os.Getenv("OPENAI_URL")
+	}
+	
+	deploymentName := os.Getenv("OPENAI_MODEL")
+	if deploymentName == "" {
+		deploymentName = "o4-mini"
+	}
+	
+	// Set reasonable token limit for completion
+	maxTokens := int32(1000)
+	
+	if apiKey == "" {
+		return "", fmt.Errorf("export AZURE_OPENAI_API_KEY=<api_key> #execute this in your terminal and try again")
+	}
+	
+	if endpoint == "" {
+		return "", fmt.Errorf("export AZURE_OPENAI_ENDPOINT=<endpoint> #execute this in your terminal and try again")
+	}
+
+	// Initialize the OpenAI client with API key-based authentication
+	keyCredential, err := azopenai.NewKeyCredential(apiKey)
+	if err != nil {
+		return "", fmt.Errorf("error creating credential: %v", err)
+	}
+	
 	var client *azopenai.Client
 
-	if strings.Contains(url, "azure") {
-		client, err = azopenai.NewClientWithKeyCredential(url, keyCredential, nil)
+	if strings.Contains(endpoint, "azure") {
+		client, err = azopenai.NewClientWithKeyCredential(endpoint, keyCredential, nil)
 		if err != nil {
 			return "", fmt.Errorf("error creating Azure OpenAI client: %v", err)
 		}
 	} else {
-		client, err = azopenai.NewClientForOpenAI(url, keyCredential, nil)
+		client, err = azopenai.NewClientForOpenAI(endpoint, keyCredential, nil)
 		if err != nil {
-			return "", fmt.Errorf("error creating Azure OpenAI client: %v", err)
+			return "", fmt.Errorf("error creating OpenAI client: %v", err)
 		}
-
-	}
-	if model == "" {
-		model = openai.GPT4
 	}
 
 	resp, err := client.GetChatCompletions(
-		context.Background(),
+		context.TODO(),
 		azopenai.ChatCompletionsOptions{
 			Messages:   messages,
-			Deployment: model,
+			Deployment: deploymentName,
+			MaxTokens:  &maxTokens,
 		},
 		nil,
 	)
