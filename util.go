@@ -124,6 +124,9 @@ func getChatCompletionResponse(messages []azopenai.ChatMessage) (string, error) 
 		deploymentName = "o4-mini"
 	}
 	
+	// Set reasonable token limit for completion
+	maxTokens := int32(1000)
+	
 	if apiKey == "" {
 		return "", fmt.Errorf("export AZURE_OPENAI_API_KEY=<api_key> #execute this in your terminal and try again")
 	}
@@ -153,10 +156,11 @@ func getChatCompletionResponse(messages []azopenai.ChatMessage) (string, error) 
 	}
 
 	resp, err := client.GetChatCompletions(
-		context.Background(),
+		context.TODO(),
 		azopenai.ChatCompletionsOptions{
 			Messages:   messages,
 			Deployment: deploymentName,
+			MaxTokens:  &maxTokens,
 		},
 		nil,
 	)
