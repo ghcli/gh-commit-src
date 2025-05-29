@@ -50,24 +50,26 @@ Fun Fact: Using an AI to write commits and other automations can reduce the risk
 
 Before running AutoCommit, it's advisable to set a few environment variables 🔑:
 
-- `OPENAI_URL`:  Override openai api eg: azure openai (Optional; Default: openai url)
-- `OPENAI_API_KEY`: The API key for the GPT-4 model (🚨 **Required**).
-- `OPENAI_MODEL`: Specify a different language model 🔄 (Optional; Default: `gpt-4`).
+- `AZURE_OPENAI_ENDPOINT`: Azure OpenAI endpoint URL (🚨 **Required** for Azure OpenAI).
+- `AZURE_OPENAI_API_KEY`: The API key for Azure OpenAI (🚨 **Required** for Azure OpenAI).
+- `OPENAI_URL`: Override openai api eg: azure openai (Optional; Fallback for backward compatibility)
+- `OPENAI_API_KEY`: The API key for the OpenAI model (Optional; Fallback for backward compatibility).
+- `OPENAI_MODEL`: Specify a different language model 🔄 (Optional; Default: `o4-mini`).
 - `FINE_TUNE_PARAMS`: Additional parameters for fine-tuning the model output ⚙️ (Optional; Default: `{}`).
 
 Add these environment variables by appending them to your `.bashrc`, `.zshrc`, or other shell configuration files 📄:
 
 ```bash
-export OPENAI_URL=https://apiendpoint.openai.azure.com
-export OPENAI_MODEL=llm-large
-export OPENAI_API_KEY=your-openai-api-key-here
+export AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com
+export AZURE_OPENAI_API_KEY=your-azure-openai-api-key-here
+export OPENAI_MODEL=o4-mini
 export FINE_TUNE_PARAMS='{"temperature": 0.7}' 
 ```
 
 Or, you can set them inline before running the AutoCommit command 🖱️:
 
 ```bash
-OPENAI_URL=your-openai-api-key-here OPENAI_MODEL=gpt-4 FINE_TUNE_PARAMS='{"temperature": 0.7}' git auto-commit
+AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com AZURE_OPENAI_API_KEY=your-api-key OPENAI_MODEL=o4-mini git auto-commit
 ```
 
 ### Complete Install 📦
