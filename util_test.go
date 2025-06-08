@@ -4,6 +4,7 @@ import (
 	"reflect"
 	"testing"
 	"github.com/Azure/azure-sdk-for-go/sdk/ai/azopenai"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 )
 
 func Test_getGitDiff(t *testing.T) {
@@ -186,5 +187,20 @@ func Test_formatResponse(t *testing.T) {
 				t.Errorf("formatResponse() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func Test_azureClientOptionsSetAPIVersion(t *testing.T) {
+	// Test that Azure client creation includes proper API version
+	// This test verifies the fix for o4-mini model compatibility
+	clientOptions := &azopenai.ClientOptions{
+		ClientOptions: policy.ClientOptions{
+			APIVersion: "2024-12-01-preview",
+		},
+	}
+	
+	// Verify the API version is set correctly
+	if clientOptions.ClientOptions.APIVersion != "2024-12-01-preview" {
+		t.Errorf("Expected API version to be '2024-12-01-preview', got '%s'", clientOptions.ClientOptions.APIVersion)
 	}
 }

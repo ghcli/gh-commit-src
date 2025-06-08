@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/Azure/azure-sdk-for-go/sdk/ai/azopenai"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 	"github.com/cli/go-gh/v2/pkg/api"
 	"github.com/joho/godotenv"
@@ -118,7 +119,12 @@ func getChatCompletionResponse(messages []azopenai.ChatMessage) (string, error) 
 	var client *azopenai.Client
 
 	if strings.Contains(url, "azure") {
-		client, err = azopenai.NewClientWithKeyCredential(url, keyCredential, nil)
+		clientOptions := &azopenai.ClientOptions{
+			ClientOptions: policy.ClientOptions{
+				APIVersion: "2024-12-01-preview",
+			},
+		}
+		client, err = azopenai.NewClientWithKeyCredential(url, keyCredential, clientOptions)
 		if err != nil {
 			return "", fmt.Errorf("error creating Azure OpenAI client: %v", err)
 		}
